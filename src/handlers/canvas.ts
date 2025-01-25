@@ -70,10 +70,17 @@ export const handleResize = () => {
 export const setupEventListeners = () => {
   if (!state.canvas) return;
 
+  // Mouse events
   state.canvas.addEventListener("mousedown", startDrawing);
   state.canvas.addEventListener("mousemove", draw);
   state.canvas.addEventListener("mouseup", stopDrawing);
   state.canvas.addEventListener("mouseout", stopDrawing);
+
+  // Touch events
+  state.canvas.addEventListener("touchstart", handleTouchStart);
+  state.canvas.addEventListener("touchmove", handleTouchMove);
+  state.canvas.addEventListener("touchend", stopDrawing);
+  state.canvas.addEventListener("touchcancel", stopDrawing);
 };
 
 export function startDrawing(e: MouseEvent) {
@@ -121,4 +128,28 @@ export const draw = (e: MouseEvent) => {
   if (state.currentTool === "pencil") {
     state.lastPoint = currentPoint;
   }
+};
+
+const handleTouchStart = (e: TouchEvent) => {
+  e.preventDefault(); // Prevent scrolling
+  if (!state.canvas) return;
+
+  const touch = e.touches[0];
+  const mouseEvent = new MouseEvent("mousedown", {
+    clientX: touch.clientX,
+    clientY: touch.clientY,
+  });
+  startDrawing(mouseEvent);
+};
+
+const handleTouchMove = (e: TouchEvent) => {
+  e.preventDefault(); // Prevent scrolling
+  if (!state.canvas) return;
+
+  const touch = e.touches[0];
+  const mouseEvent = new MouseEvent("mousemove", {
+    clientX: touch.clientX,
+    clientY: touch.clientY,
+  });
+  draw(mouseEvent);
 };

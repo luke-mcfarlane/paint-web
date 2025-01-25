@@ -11,4 +11,5 @@ export const state = {
   currentColor: "#000000",
   currentLineWidth: 2,
   currentTool: "pencil" as Tool,
+  isConnected: false,
 };
